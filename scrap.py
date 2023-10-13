@@ -1,5 +1,6 @@
 import datetime
 import requests
+from colorama import Fore
 from bs4 import BeautifulSoup
 
 from sources import *
@@ -50,11 +51,13 @@ def scrapping_sources():
 
             sources.append(temporalcoin)
 
-        except: print(str("This source (")+ str(id_source)+"  "+ str(value) +"    "+ url+(") not contain valid value"))
+        except:
 
-    coins = sources
+            if __name__ == "__main__":
+                print (Fore.RED+(str("This source with id:") + str(id_source) + " not contain valid value"))
+                print ("this value is " +Fore.YELLOW+ str(value) +Fore.RED+ " this is not a float" +Fore.RESET)
 
-    return coins
+    return sources
 
 
 
@@ -79,7 +82,7 @@ def average(coins,name_coin):
 
 
 def wrongValuesFilter(coins,name_coin,average,tolerance):
-    tolerance = average/(tolerance/100)
+    tolerance = tolerance
     okaycoins = []
 
     for coin in coins:
@@ -93,22 +96,19 @@ def wrongValuesFilter(coins,name_coin,average,tolerance):
 
 
 
-
-
-
-
-
-
 source_coins = scrapping_sources()
-print(source_coins)
+#print(source_coins)
 
 
 
 average_eur = average(source_coins,"EUR")
-print(average_eur)
-
-okaycoins_eur = wrongValuesFilter(source_coins,"EUR",average_eur,100)
-print(okaycoins_eur)
-
+#print(average_eur)
+okaycoins_eur = wrongValuesFilter(source_coins,"EUR",average_eur,0.05)
+#print(okaycoins_eur)
 newaverage = average(okaycoins_eur,"EUR")
 print(newaverage)
+
+coin = Coin()
+coin.name = "EUR"
+coin.valueInDollars = newaverage
+coin.datetime = datetime.datetime.now()
