@@ -87,22 +87,5 @@ eur = Coin()
 eur = eur.get_value(EUR,tolerancePerCent)
 print(eur)
 print("")
-print(eur.valueInDollars)
+print(eur.name)
 
-
-
-#print(coin.valueInDollars)
-
-
-"""average_eur = average(source_coins,"EUR")
-#print(average_eur)
-okaycoins_eur = wrongValuesFilter(source_coins,"EUR",average_eur,0.05)
-#print(okaycoins_eur)
-newaverage = average(okaycoins_eur,"EUR")
-print(newaverage)
-
-coin = Coin()
-coin.name = "EUR"
-coin.valueInDollars = newaverage
-coin.datetime = datetime.datetime.now()
-"""
