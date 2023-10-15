@@ -2,6 +2,8 @@ import datetime
 import requests
 from colorama import Fore
 from bs4 import BeautifulSoup
+import time
+import sqlite3
 
 from sources import *
 
@@ -22,7 +24,8 @@ class Coin:
         all_values = []
 
         for source in sources:
-
+            print(("____________________________________________"))
+            print(("")+str(source[1])+("            "))
             try:
                 id_source= source[0]
                 name_coin= source[1]
@@ -78,5 +81,14 @@ class Coin:
         coin.datetime = datetime.datetime.now()
 
         return coin
-        
- 
+
+
+
+def loop():
+    while 1:
+        tolerance = 5 #per cent
+        coin = Coin()
+        eur = coin.get_value(EUR,tolerance)
+        gbp = coin.get_value(GBP,tolerance)
+
+        time.sleep(60)
