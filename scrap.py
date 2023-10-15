@@ -79,13 +79,3 @@ class Coin:
 
         return coin
         
-
-tolerancePerCent = 5
-
-
-eur = Coin()
-eur = eur.get_value(EUR,tolerancePerCent)
-print(eur)
-print("")
-print(eur.name)
-
