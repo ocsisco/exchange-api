@@ -1,6 +1,7 @@
 from multiprocessing import Process
 import sqlite3
 from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
 
 from scrap import loop
 
