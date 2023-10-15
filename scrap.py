@@ -13,13 +13,7 @@ class Coin:
         self.valueInDollars = float
         self.datetime = None
 
-
-
-def scrapping_sources():
-
-    sources = []
-
-    for source in SOURCES:
+    def get_value(self,source):
 
         try:
             id_source= source[0]
@@ -44,40 +38,15 @@ def scrapping_sources():
 
             print(str(value))
 
-            temporalcoin = Coin()
-            temporalcoin.name = name_coin
-            temporalcoin.valueInDollars = value
-            temporalcoin.datetime = datetime.datetime.now()
-
-            sources.append(temporalcoin)
+            self.name = name_coin
+            self.valueInDollars = value
+            self.datetime = datetime.datetime.now()
 
         except:
 
             if __name__ == "__main__":
                 print (Fore.RED+(str("This source with id:") + str(id_source) + " not contain valid value"))
                 print ("this value is " +Fore.YELLOW+ str(value) +Fore.RED+ " this is not a float" +Fore.RESET)
-
-    return sources
-
-
-
-def average(coins,name_coin):
-    """
-    From a list of objects Coin, extract the average
-
-    """
-    
-    amount = []
-    for coin in coins:
-        if coin.name == name_coin:
-            amount.append(float(coin.valueInDollars))
-
-    total= 0.0
-    for value in amount:
-        total= total + value
-    average = total/(int(len(amount)))
-
-    return average
 
 
 
@@ -94,14 +63,34 @@ def wrongValuesFilter(coins,name_coin,average,tolerance):
 
 
 
+def average(nameCoinSource):
+    all_eur_values = []
+    coin = Coin()
+    for source in nameCoinSource:
+        coin.get_value(source)
+        all_eur_values.append(coin.valueInDollars)
+
+    total_value = 0.0
+    for value in all_eur_values:
+        total_value = total_value + value
+    value = total_value/len(all_eur_values)
+
+    coin.valueInDollars = value
+    return coin
 
 
-source_coins = scrapping_sources()
-#print(source_coins)
+eur = average(EUR)
+gbp = average(GBP)
 
 
 
-average_eur = average(source_coins,"EUR")
+
+
+
+#print(coin.valueInDollars)
+
+
+"""average_eur = average(source_coins,"EUR")
 #print(average_eur)
 okaycoins_eur = wrongValuesFilter(source_coins,"EUR",average_eur,0.05)
 #print(okaycoins_eur)
@@ -112,3 +101,4 @@ coin = Coin()
 coin.name = "EUR"
 coin.valueInDollars = newaverage
 coin.datetime = datetime.datetime.now()
+"""
