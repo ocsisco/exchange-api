@@ -13,14 +13,13 @@ cursor.execute(
     CREATE TABLE IF NOT EXISTS currency_exchange(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name_coin varchar(255),
-        datetime ,
+        datetime,
         coinvalue float(255)
     );
     """
     )
 connection.commit()
 connection.close()
-
 
 # Run the loop
 obtain_currency = Process(target=loop)
@@ -29,7 +28,6 @@ obtain_currency.start()
 # Web server
 app = FastAPI()
 
-
 @app.get("/")
-async def root():
+async def fetch_one():
     return {"message": "Hello World"}

@@ -2,6 +2,7 @@ import datetime
 import requests
 from colorama import Fore
 from bs4 import BeautifulSoup
+import sources
 import time
 import sqlite3
 
@@ -83,12 +84,28 @@ class Coin:
         return coin
 
 
-
 def loop():
     while 1:
+
+
         tolerance = 5 #per cent
         coin = Coin()
         eur = coin.get_value(EUR,tolerance)
         gbp = coin.get_value(GBP,tolerance)
 
+
+
+        connection = sqlite3.connect("database.db")
+        cursor = connection.cursor()
+
+        cursor.execute("INSERT INTO currency_exchange(name_coin,datetime,coinvalue) VALUES(?,?,?);", str(eur.name), str(eur.datetime), float(eur.valueInDollars))
+
+        connection.commit()
+        connection.close()
+
+
         time.sleep(60)
+        
+
+if __name__=="__main__":
+    loop()
