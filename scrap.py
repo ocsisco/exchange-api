@@ -68,24 +68,30 @@ class Coin:
         preaverage = total_value/len(all_values)
 
         # Extract only coherent values, inside of the tolerance range
-        all_eur_values_normalized = []
+        all_values_normalized = []
         tolerancePerCent = (tolerancePerCent*preaverage)/100
         for value in all_values:
             if value < preaverage + tolerancePerCent and value > preaverage - tolerancePerCent:
-                all_eur_values_normalized.append(value)
+                all_values_normalized.append(value)
 
         # Extract the average of the all eur values normalized
         total_value = 0.0
         average = 0.0
-        for value in all_eur_values_normalized:
+        for value in all_values_normalized:
             total_value = total_value + value
         try:
-            average = total_value/len(all_eur_values_normalized)
+            average = total_value/len(all_values_normalized)
 
             coin = Coin()
             coin.name = name_coin
             coin.valueInDollars = average
             coin.datetime = datetime.datetime.now()
+            
+            for value in all_values:
+                if value not in all_values_normalized:
+                    print(Fore.LIGHTMAGENTA_EX+"Value: " + str(value) + " discarted, (out of tolerance)"+Fore.RESET)
+
+            print("The average of " + str(coin.name) + " is: " + str(coin.valueInDollars))
             return coin
         
         except ZeroDivisionError:
@@ -125,3 +131,8 @@ def loop():
 
         time.sleep(60)
 
+
+if __name__=="__main__":
+    for sources in all_sources:
+        coin = Coin()
+        coin.get_value(sources,5)

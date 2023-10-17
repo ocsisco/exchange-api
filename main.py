@@ -1,7 +1,7 @@
 from multiprocessing import Process
 import sqlite3
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
+from fastapi import requests
 
 from scrap import loop
 
@@ -19,6 +19,38 @@ obtain_currency.start()
 # Web server
 app = FastAPI()
 
-@app.get("/")
-async def fetch_one():
-    return {"message": "Hello World"}
+@app.get("/fetch-one",tags=["tasa de conversion"])
+async def fetch_one(From:str,To:str):
+
+    base = From
+    result = To
+
+    date_values = {}
+    date_value = "null"
+
+    values = {}
+
+    if base != "USD":
+
+        connection = sqlite3.connect("database.db")
+        cursor = connection.cursor()
+
+        cursor.execute(
+            "SELECT MAX(id),name_coin,datetime,coinvalue FROM currency_exchange WHERE name_coin=? ",
+            (result,),
+        )
+        cursor = cursor.fetchall()
+
+        connection.commit()
+        connection.close()
+
+    return 
+
+
+
+
+ 
+
+    return (From,To)
+
+
