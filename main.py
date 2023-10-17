@@ -3,7 +3,7 @@ import sqlite3
 from fastapi import FastAPI
 from fastapi import requests
 
-from scrap import loop
+from scrap import loop,Coin
 
 # Create ddbb
 connection = sqlite3.connect("database.db")
@@ -25,12 +25,7 @@ async def fetch_one(From:str,To:str):
     base = From
     result = To
 
-    date_values = {}
-    date_value = "null"
-
-    values = {}
-
-    if base != "USD":
+    if base == "USD":
 
         connection = sqlite3.connect("database.db")
         cursor = connection.cursor()
@@ -44,13 +39,19 @@ async def fetch_one(From:str,To:str):
         connection.commit()
         connection.close()
 
-    return 
+        coin = Coin()
+        coin.name = cursor[0][1]
+        coin.datetime = cursor[0][2]
+        coin.valueInDollars = float(cursor[0][3])
+
+    return {
+        "From": From,
+        "To": To,
+        "Value":round(coin.valueInDollars,3)
+        }
 
 
 
 
  
-
-    return (From,To)
-
 
