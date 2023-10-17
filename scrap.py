@@ -97,9 +97,7 @@ class Coin:
         except ZeroDivisionError:
             print(Fore.RED+"The tolerance in "+ name_coin +" is too small or one of its sources is ridiculously over or under value \nThe algorithm eliminate values outside the tolerance range, but if a value is extremely large, the average is too far from the true average and all values will be out of range; consult these sources."+Fore.RESET)
 
- 
-
-    def coin_to_database(self):
+    def to_database(self):
 
         # Put coin in database
         connection = sqlite3.connect("database.db")
@@ -120,13 +118,12 @@ class Coin:
 def loop():
     while 1:
 
-        coin = Coin()
-
         for sources in all_sources:
             # Check if can create value before upload to database
             try:
-                coin = coin.get_value(sources,tolerance)
-                coin.coin_to_database()
+                coin = Coin()
+                coin:Coin = coin.get_value(sources,tolerance)
+                coin.to_database()
             except AttributeError: pass
 
         time.sleep(60)
