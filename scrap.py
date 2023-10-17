@@ -98,14 +98,17 @@ def loop():
         connection = sqlite3.connect("database.db")
         cursor = connection.cursor()
 
-        cursor.execute("INSERT INTO currency_exchange(name_coin,datetime,coinvalue) VALUES(?,?,?);", str(eur.name), str(eur.datetime), float(eur.valueInDollars))
+        cursor.execute("INSERT INTO currency_exchange(name_coin,datetime,coinvalue) VALUES(?,?,?);", (eur.name,eur.datetime,eur.valueInDollars))
+        print(str(eur.name))
+        print(str(eur.datetime))
+        print(float(eur.valueInDollars))
 
         connection.commit()
         connection.close()
 
 
         time.sleep(60)
-        
+
 
 if __name__=="__main__":
     loop()
