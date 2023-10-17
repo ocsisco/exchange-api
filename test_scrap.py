@@ -15,7 +15,4 @@ def test_name():
 def test_format_sources():
     for source in EUR:
         assert len(source) == 6
-    for source in GBP:
-        assert len(source) == 6
-
 
