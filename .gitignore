@@ -1,8 +1,7 @@
 
-#__pycache__
+__pycache__
 
-#.pytest_cache
+.pytest_cache
 
-#database.db
+database.db
 
-#env
