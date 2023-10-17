@@ -83,29 +83,31 @@ class Coin:
 
         return coin
 
-
-def loop():
-    while 1:
-
-
-        tolerance = 5 #per cent
-        coin = Coin()
-        eur = coin.get_value(EUR,tolerance)
-        gbp = coin.get_value(GBP,tolerance)
-
-
+    def coin_to_database(self):
 
         connection = sqlite3.connect("database.db")
         cursor = connection.cursor()
 
-        cursor.execute("INSERT INTO currency_exchange(name_coin,datetime,coinvalue) VALUES(?,?,?);", (eur.name,eur.datetime,eur.valueInDollars))
-        print(str(eur.name))
-        print(str(eur.datetime))
-        print(float(eur.valueInDollars))
+        cursor.execute("INSERT INTO currency_exchange(name_coin,datetime,coinvalue) VALUES(?,?,?);", (self.name,self.datetime,self.valueInDollars))
+        print(str(self.name))
+        print(str(self.datetime))
+        print(float(self.valueInDollars))
 
         connection.commit()
         connection.close()
 
+
+def loop():
+    while 1:
+
+        tolerance = 5 #per cent
+        coin = Coin()
+
+        eur = coin.get_value(EUR,tolerance)
+        eur.coin_to_database()
+
+        gbp = coin.get_value(GBP,tolerance)
+        gbp.coin_to_database()
 
         time.sleep(60)
 
