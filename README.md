@@ -4,7 +4,7 @@
 
 How to use "Exchange api"?
 
-Run the uvicorn server in local with command "uvicorn main:app" and enjoy of the next endpoints:
+Install the dependencies and run the uvicorn server in local with command "uvicorn main:app" and enjoy of the next endpoints:
 
 ``` [python]
 /fetch-one
