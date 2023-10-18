@@ -1,6 +1,7 @@
 from multiprocessing import Process
 import json
 import sqlite3
+import datetime
 from fastapi import FastAPI
 from fastapi import requests
 
@@ -12,6 +13,22 @@ cursor = connection.cursor()
 cursor.execute("CREATE TABLE IF NOT EXISTS currency_exchange(id INTEGER PRIMARY KEY AUTOINCREMENT,name_coin varchar(255),datetime,coinvalue float(255));")
 connection.commit()
 connection.close()
+
+# Download value from ddbb
+def from_db_get_value(name_coin):
+
+    connection = sqlite3.connect("database.db")
+    cursor = connection.cursor()
+
+    cursor.execute(
+        "SELECT MAX(id),name_coin,datetime,coinvalue FROM currency_exchange WHERE name_coin=? ",
+        (name_coin,),
+        )
+    cursor = cursor.fetchall()
+    connection.commit()
+    connection.close()
+    return cursor
+
 
 # Run the loop
 obtain_currency = Process(target=loop)
@@ -26,45 +43,47 @@ async def fetch_one(From:str,To:str):
     base = From
     result = To
 
-    if base == "USD":
+    if base == "USD" and result == "USD":
 
-        connection = sqlite3.connect("database.db")
-        cursor = connection.cursor()
+        coin = Coin()
+        coin.name = base
+        coin.datetime = datetime.datetime.now()
+        coin.valueInDollars = 1.0
 
-        cursor.execute(
-            "SELECT MAX(id),name_coin,datetime,coinvalue FROM currency_exchange WHERE name_coin=? ",
-            (result,),
-        )
-        cursor = cursor.fetchall()
+    if base == "USD" and result != "USD":
 
-        connection.commit()
-        connection.close()
-
+        cursor = from_db_get_value(result)
         coin = Coin()
         coin.name = cursor[0][1]
         coin.datetime = cursor[0][2]
         coin.valueInDollars = float(cursor[0][3])
 
-    if base != "USD":
+    if base != "USD" and result == "USD":
 
-        connection = sqlite3.connect("database.db")
-        cursor = connection.cursor()
-
-        cursor.execute(
-            "SELECT MAX(id),name_coin,datetime,coinvalue FROM currency_exchange WHERE name_coin=? ",
-            (base,),
-        )
-        cursor = cursor.fetchall()
-
-        connection.commit()
-        connection.close()
-
+        cursor = from_db_get_value(base)
+        value = float(cursor[0][3])
+        value = 1/value
         coin = Coin()
-        coin.valueInDollars = float(cursor[0][3])
+        coin.name = cursor[0][1]
+        coin.datetime = cursor[0][2]
+        coin.valueInDollars = value
+
+    if base != "USD" and result != "USD":
+
+        cursor = from_db_get_value(base)
+        valueBase = float(cursor[0][3])
+        valueBase = 1/valueBase
+
+        cursor = from_db_get_value(result)
+        valueResult = float(cursor[0][3])
+        valueResult = valueResult
+
+        value = valueBase*valueResult
 
         coin = Coin()
         coin.name = cursor[0][1]
         coin.datetime = cursor[0][2]
+        coin.valueInDollars = value
 
     return {
         "From": From,
