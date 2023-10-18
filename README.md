@@ -118,3 +118,4 @@ Response body
 }`
 
 
+You can run with docker, you can will make a image from dockerimage an run this image with command "docker run --rm -it  -p 80:80/tcp your_image_name"
