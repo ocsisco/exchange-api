@@ -29,19 +29,8 @@ def from_db_get_value(name_coin):
     connection.close()
     return cursor
 
-
-# Run the loop
-obtain_currency = Process(target=loop)
-obtain_currency.start()
-
-# Web server
-app = FastAPI()
-
-@app.get("/fetch-one",tags=["tasa de conversion"])
-async def fetch_one(From:str,To:str):
-
-    base = From
-    result = To
+# All possible ways
+def all_ways(base,result):
 
     if base == "USD" and result == "USD":
 
@@ -84,6 +73,22 @@ async def fetch_one(From:str,To:str):
         coin.name = cursor[0][1]
         coin.datetime = cursor[0][2]
         coin.valueInDollars = value
+    return coin
+
+# Run the loop
+obtain_currency = Process(target=loop)
+obtain_currency.start()
+
+# Web server
+app = FastAPI()
+
+@app.get("/fetch-one",tags=["Tasa de conversión"])
+async def fetch_one(From:str,To:str):
+
+    base = From
+    result = To
+
+    coin = all_ways(base,result)
 
     return {
         "From": From,
@@ -91,26 +96,70 @@ async def fetch_one(From:str,To:str):
         }
 
 
-@app.get("/fetch-multi",tags=["tasa de conversion multiple"])
+@app.get("/fetch-multi",tags=["Tasa de conversion múltiple"])
 async def fetch_multi(From:str,To:str):
 
     base = From
-    result = To.split(",")
-    pass
+    results = To.split(",")
+    value_results = []
+
+    for result in results:
+
+        coin = all_ways(base,result) 
+        value_results.append({"Coin":result,"Value":round(coin.valueInDollars,3)})
+
+    return {
+        "From": From,
+        "To": value_results
+        }
  
 
-@app.get("/fetch-all",tags=["tasa de conversion todas monedas ddisponibles"])
+@app.get("/fetch-all",tags=["Tasa de conversión para todas las monedas disponibles"])
 async def fetch_all(From:str):
+
     base = From
-    pass
+    value_results = []
+    currencies = ["USD"]
+
+    connection = sqlite3.connect("database.db")
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT DISTINCT name_coin FROM currency_exchange")
+    cursor = cursor.fetchall()
+
+    connection.commit()
+    connection.close()
+
+    for currency in cursor:
+        currencies.append(currency[0])
+
+    for result in currencies:
+
+        coin = all_ways(base,result)   
+        value_results.append({"Coin":result,"Value":round(coin.valueInDollars,3)})
+
+    return {
+        "From": From,
+        "To": value_results
+        }
 
 
-@app.get("/convert",tags=["convertir valor de una moneda a otra"])
+@app.get("/convert",tags=["Convertir valor de una moneda a otra"])
 async def convert(From:str,To:str,Amount:float):
 
     base = From
     result = To
     amount = Amount
+
+    coin = all_ways(base,result)
+    value = coin.valueInDollars * amount
+
+    return {
+    "From": From,
+    "Amount": Amount,
+    "To":{"Coin":To,"Value":round(value,3)}
+    }
+
 
     pass
 
