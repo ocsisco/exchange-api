@@ -1,9 +1,10 @@
-# DIVISA
+# EXCHANGE API
 
-**"Divisa" is an api for currency exchange, it works in a similar way to the commercial apis available in the market**
+**"Exchange api" is an api for currency exchange, it works in a similar way to the commercial apis available in the market**
 
-How to use "divisa"?
-Run main.py and enjoy, "divisa" consists of the next endpoints:
+How to use "Exchange api"?
+
+Run the uvicorn server in local with command "uvicorn main:app" and enjoy of the next endpoints:
 
 ``` [python]
 /fetch-one
