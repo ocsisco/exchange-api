@@ -73,6 +73,7 @@ def all_ways(base,result):
         coin.name = cursor[0][1]
         coin.datetime = cursor[0][2]
         coin.valueInDollars = value
+        
     return coin
 
 # Run the loop
