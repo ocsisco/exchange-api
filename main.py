@@ -1,3 +1,4 @@
+
 from multiprocessing import Process
 import json
 import sqlite3
@@ -82,6 +83,9 @@ obtain_currency.start()
 
 # Web server
 app = FastAPI()
+app.title = "Exchange api"
+app.version = "1.0"
+
 
 @app.get("/fetch-one",tags=["Tasa de conversión"])
 async def fetch_one(From:str,To:str):
